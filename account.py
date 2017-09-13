@@ -93,36 +93,36 @@ class contract(metaclass=singleton):
 
     @elapse
     def trade(self,src,idx):
-        idx=idx.join(src)
-        t0=None
-        state=[]
-        for t,row in idx.iterrows():
-            ind=src.index.slice_indexer(start=t0,end=t)
-            state.extend(np.ones(ind.stop-ind.start-1)*self.pst)
-            self.ocsc(row.signal,t,1,row.cl)
-            t0=t
-        ind=src.index.slice_indexer(start=t0)
-        state.extend(np.ones(ind.stop-ind.start)*self.pst)
-        state=pd.DataFrame(state,index=src.index)
-        return state
-
-        # t0=0
+        # idx=idx.join(src)
+        # t0=None
         # state=[]
-        # # sgn=idx.iterrows()
-        # pst=loc(src.index,idx.index)
-        # idx=idx.join(src[src.index.isin(idx.index)])
         # for t,row in idx.iterrows():
+        #     ind=src.index.slice_indexer(start=t0,end=t)
+        #     state.extend(np.ones(ind.stop-ind.start-1)*self.pst)
         #     self.ocsc(row.signal,t,1,row.cl)
-        #     s=pst.__next__()
-        #     state.extend(np.ones(s-t0)*self.pst)
-        #     t0=s
-        # state.extend(np.ones(len(src.index)-t0)*self.pst)
+        #     t0=t
+        # ind=src.index.slice_indexer(start=t0)
+        # state.extend(np.ones(ind.stop-ind.start)*self.pst)
         # state=pd.DataFrame(state,index=src.index)
         # return state
 
+        t0=0
+        state=[]
+        # sgn=idx.iterrows()
+        pst=loc(src.index,idx.index)
+        idx=idx.join(src[src.index.isin(idx.index)])
+        for t,row in idx.iterrows():
+            self.ocsc(row.signal,t,1,row.cl)
+            s=pst.__next__()
+            state.extend(np.ones(s-t0)*self.pst)
+            t0=s
+        state.extend(np.ones(len(src.index)-t0)*self.pst)
+        state=pd.DataFrame(state,index=src.index)
+        return state
+
 @elapse    
 def loc(idx,ipt):
-    if isinstance(idx,pd.tseries.index.DatetimeIndex):
+    if isinstance(idx,pd.core.indexes.datetimes.DatetimeIndex):
         opt=[]
         for i in ipt:
             # opt.append(idx.get_loc(i))
