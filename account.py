@@ -102,19 +102,8 @@ class contract(metaclass=singleton):
             t0=t
         ind=src.index.slice_indexer(start=t0)
         state.extend(np.ones(ind.stop-ind.start)*self.pst)
-        # state=pd.DataFrame(state,index=src.index)
+        state=pd.DataFrame(state,index=src.index)
         return state
-
-        # state=pd.DataFrame([])
-        # for t,row in idx.iterrows():
-        #     ind=src.index[src.index.slice_indexer(start=t0,end=t)][:-1]
-        #     state=state.append(pd.DataFrame(np.ones(len(ind))*self.pst,index=ind))
-        #     state=pd.concat([state,pd.DataFrame(np.ones(len(ind))*self.pst,index=ind)])
-        #     self.ocsc(row.signal,t,1,row.cl)
-        #     t0=t
-        #     # print(row.signal,'/',self.pst)
-        # # print('prf =',state)
-        # return state
 
 
 dname=os.path.split(os.path.realpath(__file__))[0]+'\me.s3db'
