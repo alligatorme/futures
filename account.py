@@ -89,6 +89,7 @@ class contract(metaclass=singleton):
         # self.pst+=idt*self.drt*n
         self.lump()
 
+    
 
     @elapse
     def trade(self,src,idx):
@@ -104,6 +105,29 @@ class contract(metaclass=singleton):
         state.extend(np.ones(ind.stop-ind.start)*self.pst)
         state=pd.DataFrame(state,index=src.index)
         return state
+
+        # t0=0
+        # state=[]
+        # # sgn=idx.iterrows()
+        # pst=loc(src.index,idx.index)
+        # idx=idx.join(src[src.index.isin(idx.index)])
+        # for t,row in idx.iterrows():
+        #     self.ocsc(row.signal,t,1,row.cl)
+        #     s=pst.__next__()
+        #     state.extend(np.ones(s-t0)*self.pst)
+        #     t0=s
+        # state.extend(np.ones(len(src.index)-t0)*self.pst)
+        # state=pd.DataFrame(state,index=src.index)
+        # return state
+
+@elapse    
+def loc(idx,ipt):
+    if isinstance(idx,pd.tseries.index.DatetimeIndex):
+        opt=[]
+        for i in ipt:
+            # opt.append(idx.get_loc(i))
+            yield idx.get_loc(i)
+    # return opt
 
 
 dname=os.path.split(os.path.realpath(__file__))[0]+'\me.s3db'
