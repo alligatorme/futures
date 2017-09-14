@@ -1,17 +1,7 @@
 import sqlite3,os
 import pandas as pd
-import time,datetime
-from functools import wraps
+from attach import elapse
 
-# @functools.wraps
-def elapse(func):
-	@wraps(func)
-	def wrapped(*arg,**kw):
-		start=time.clock()
-		tmp=func(*arg,**kw)
-		print('Time Cost of %s = %f ms' % (func.__name__,(time.clock()-start)*1000))
-		return tmp
-	return wrapped
 
 # import weakref
 class singleton(type):
