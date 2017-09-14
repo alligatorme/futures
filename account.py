@@ -91,7 +91,14 @@ class contract(metaclass=singleton):
         self.lump()
 
     @elapse
+    def divide(self,src,idx):
+        div=[src.index.get_loc(i) for i in idx.index]
+        return div
+
+
+    @elapse
     def trade(self,src,idx):
+        self.divide(src,idx)
         idx=idx.join(src)
         t0=None
         state=[]
