@@ -13,6 +13,9 @@ def elapse(func):
 		if delta<1:
 			ut='ms'
 			times=1000
+		if delta<0.001:
+			ut='us'
+			times=1000000
 		print('Time Cost of %s = %f %s' % (func.__name__,delta*times,ut))
 		return tmp
 	return wrapped

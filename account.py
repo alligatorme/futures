@@ -89,27 +89,36 @@ class contract(metaclass=singleton):
                 if n<0: self.tank.append((t0,-n,p0))
         # self.pst+=idt*self.drt*n
         self.lump()
+    
+    def divide(self,src,idx):
+        div=(src.get_loc(i) for i in idx)
+        start=0
+        for i in div:
+            yield (start,i)
+            start=i
+        yield (start,-1)
 
     @elapse
-    def divide(self,src,idx):
-        div=[src.index.get_loc(i) for i in idx.index]
-        return div
-
+    def element(self,src,idx):
+        idx_iter=idx.itertuples()
+        for i,j in self.divide(src.index,idx.index):
+            if i==0: continue
+            t=idx_iter.__next__()
+            self.ocsc(t[1],t[0],1,src.iat[i,4])
 
     @elapse
     def trade(self,src,idx):
-        self.divide(src,idx)
         idx=idx.join(src)
         t0=None
         state=[]
         for t,row in idx.iterrows():
-            ind=src.index.slice_indexer(start=t0,end=t)
-            state.extend(np.ones(ind.stop-ind.start-1)*self.pst)
+            # ind=src.index.slice_indexer(start=t0,end=t)
+            # state.extend(np.ones(ind.stop-ind.start-1)*self.pst)
             self.ocsc(row.signal,t,1,row.cl)
             t0=t
-        ind=src.index.slice_indexer(start=t0)
-        state.extend(np.ones(ind.stop-ind.start)*self.pst)
-        state=pd.DataFrame(state,index=src.index)
+        # ind=src.index.slice_indexer(start=t0)
+        # state.extend(np.ones(ind.stop-ind.start)*self.pst)
+        # state=pd.DataFrame(state,index=src.index)
         return state
 
         # t0=0
@@ -185,6 +194,7 @@ def main02():
     # print(signal.mask)
     # print(df.index[~idx.mask][1:])
     idx=pd.DataFrame(idx.compressed(),index=df.index[~idx.mask],columns=['signal'])
+    ts=pta.element(df,idx)
     ts=pta.trade(df,idx)
     # import matplotlib.pyplot as plt
     # plt.plot(ts)
