@@ -91,7 +91,8 @@ class contract(metaclass=singleton):
         self.lump()
     
     def divide(self,src,idx):
-        div=(src.get_loc(i) for i in idx)
+        # div=(src.get_loc(i) for i in idx)
+        div=(np.where(src==i) for i in idx)
         start=0
         for i in div:
             yield (start,i)
@@ -100,11 +101,13 @@ class contract(metaclass=singleton):
 
     @elapse
     def element(self,src,idx):
-        idx_iter=idx.itertuples()
-        for i,j in self.divide(src.index,idx.index):
+        # idx_iter=idx.itertuples()
+        idx_iter=np.nditer(idx.src)
+        for i,j in self.divide(src.idx,idx.idx):
             if i==0: continue
             t=idx_iter.__next__()
-            self.ocsc(t[1],t[0],1,src.iat[i,4])
+            # self.ocsc(t[1],t[0],1,src.iat[i,4])
+            self.ocsc(t,src.idx[i],1,src.src[i,3])
 
     @elapse
     def trade(self,src,idx):
@@ -169,6 +172,7 @@ def cross(rst):
     rst=np.sign(rst)
     # print(rst)
     sft=shift(rst,1)
+    # sft=rst.__rshift__(1)
     zr=rst==0
     if any(zr): 
         print('zero appears =',len(zr[zr]))
@@ -182,20 +186,29 @@ def cross(rst):
 
 
 def stg(t):
+    # print(t)
+    if t.dtype!=float: t=t.astype('float')
     return talib.SMA(t,7)-talib.SMA(t,20)
 
+class source():
+    def __init__(self,src,idx):
+        self.src=src
+        self.idx=idx
 
 @elapse
 def main02():
     pta=contract('m1505-')
     # pta.tax=0
-    df=db.data['m1505']
-    idx=cross(stg(np.array(df.cl.values, dtype=float)))
+    # df=db.data['m1505']
+   
+    m15=source(db.data['m1505'].values,db.data['m1505'].index.values)
+    idx=cross(stg(m15.src.T[3]))
     # print(signal.mask)
     # print(df.index[~idx.mask][1:])
-    idx=pd.DataFrame(idx.compressed(),index=df.index[~idx.mask],columns=['signal'])
-    ts=pta.element(df,idx)
-    ts=pta.trade(df,idx)
+    # idx=pd.DataFrame(idx.compressed(),index=df.index[~idx.mask],columns=['signal'])
+    idx=source(idx.compressed(),m15.idx[~idx.mask])
+    ts=pta.element(m15,idx)
+    # ts=pta.trade(df,idx)
     # import matplotlib.pyplot as plt
     # plt.plot(ts)
     # plt.show()
