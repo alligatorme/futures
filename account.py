@@ -75,7 +75,8 @@ class contract(metaclass=singleton):
             cum+=n*p
             cnt+=n
         self.pst=cnt
-        return cnt and cum/cnt or 0
+        self.avgp=cnt and cum/cnt or 0
+        # return cnt and cum/cnt or 0
 
     def ocsc(self,idt,t,n,p):        
         if idt==self.drt:
@@ -94,7 +95,7 @@ class contract(metaclass=singleton):
         # div=(src.get_loc(i) for i in idx)
         div=(np.where(src==i) for i in idx)
         start=0
-        for i in div:
+        for ([i],) in div:
             yield (start,i)
             start=i
         yield (start,-1)
@@ -103,9 +104,9 @@ class contract(metaclass=singleton):
     def element(self,src,sign):
         sign_iter=np.nditer(sign.src)
         for i,j in self.divide(src.idx,sign.idx):
+            src.plus[i:j]=self.get_prf(self.pst,src.src[i:j,3]-self.avgp)+self.fri
             if i==0: continue
             self.ocsc(sign_iter.__next__(),src.idx[i],1,src.src[i,3])
-
 
 
 dname=os.path.split(os.path.realpath(__file__))[0]+'\me.s3db'
@@ -154,7 +155,7 @@ class source():
     def __init__(self,src,idx):
         self.src=src
         self.idx=idx
-        self.plus=np.array([])
+        self.plus=np.zeros(len(src))
 
 @elapse
 def main02():
@@ -169,10 +170,11 @@ def main02():
     # idx=pd.DataFrame(idx.compressed(),index=df.index[~idx.mask],columns=['signal'])
     idx=source(idx.compressed(),m15.idx[~idx.mask])
     ts=pta.element(m15,idx) 
+    # print(m15.plus)
 
-    # import matplotlib.pyplot as plt
-    # plt.plot(ts)
-    # plt.show()
+    import matplotlib.pyplot as plt
+    plt.plot(m15.plus)
+    plt.show()
   
 
 
@@ -203,6 +205,6 @@ if __name__=="__main__":
     np.seterr(invalid='ignore')
     db=cbase(os.path.split(os.path.realpath(__file__))[0]+'\me.s3db')
     s=['op', 'hi', 'lo', 'cl', 'vol']    
-    db.merge_data('m1505',['2008-12-01 00:00:00','2008-12-02 23:00:00'],clms=s)
+    db.merge_data('m1505',['2008-12-01 00:00:00','2008-12-20 23:00:00'],clms=s)
     # main()
     main02()
