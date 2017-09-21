@@ -100,52 +100,12 @@ class contract(metaclass=singleton):
         yield (start,-1)
 
     @elapse
-    def element(self,src,idx):
-        # idx_iter=idx.itertuples()
-        idx_iter=np.nditer(idx.src)
-        for i,j in self.divide(src.idx,idx.idx):
+    def element(self,src,sign):
+        sign_iter=np.nditer(sign.src)
+        for i,j in self.divide(src.idx,sign.idx):
             if i==0: continue
-            t=idx_iter.__next__()
-            # self.ocsc(t[1],t[0],1,src.iat[i,4])
-            self.ocsc(t,src.idx[i],1,src.src[i,3])
+            self.ocsc(sign_iter.__next__(),src.idx[i],1,src.src[i,3])
 
-    @elapse
-    def trade(self,src,idx):
-        idx=idx.join(src)
-        t0=None
-        state=[]
-        for t,row in idx.iterrows():
-            # ind=src.index.slice_indexer(start=t0,end=t)
-            # state.extend(np.ones(ind.stop-ind.start-1)*self.pst)
-            self.ocsc(row.signal,t,1,row.cl)
-            t0=t
-        # ind=src.index.slice_indexer(start=t0)
-        # state.extend(np.ones(ind.stop-ind.start)*self.pst)
-        # state=pd.DataFrame(state,index=src.index)
-        return state
-
-        # t0=0
-        # state=[]
-        # # sgn=idx.iterrows()
-        # pst=loc(src.index,idx.index)
-        # idx=idx.join(src[src.index.isin(idx.index)])
-        # for t,row in idx.iterrows():
-        #     self.ocsc(row.signal,t,1,row.cl)
-        #     s=pst.__next__()
-        #     state.extend(np.ones(s-t0)*self.pst)
-        #     t0=s
-        # state.extend(np.ones(len(src.index)-t0)*self.pst)
-        # state=pd.DataFrame(state,index=src.index)
-        # return state
-
-# @elapse    
-# def loc(idx,ipt):
-#     if isinstance(idx,pd.core.indexes.datetimes.DatetimeIndex):
-#         opt=[]
-#         for i in ipt:
-#             # opt.append(idx.get_loc(i))
-#             yield idx.get_loc(i)
-#     # return opt
 
 
 dname=os.path.split(os.path.realpath(__file__))[0]+'\me.s3db'
@@ -194,6 +154,7 @@ class source():
     def __init__(self,src,idx):
         self.src=src
         self.idx=idx
+        self.plus=np.array([])
 
 @elapse
 def main02():
@@ -207,8 +168,8 @@ def main02():
     # print(df.index[~idx.mask][1:])
     # idx=pd.DataFrame(idx.compressed(),index=df.index[~idx.mask],columns=['signal'])
     idx=source(idx.compressed(),m15.idx[~idx.mask])
-    ts=pta.element(m15,idx)
-    # ts=pta.trade(df,idx)
+    ts=pta.element(m15,idx) 
+
     # import matplotlib.pyplot as plt
     # plt.plot(ts)
     # plt.show()
