@@ -49,14 +49,14 @@ class contract(metaclass=singleton):
         self.pst=0
         self.avgp=0
         
-        self.npr,self.tax,self.rto=get_info(self.get_name(name))
+        self.npr,self.tax,self.rto=get_info(self.parse_name(name))
 
         # self.name=name
         # self.drt=(name[-1:]=='-') and -1 or 1
         self.get_prf=lambda n,p:n*(self.drt*self.npr*p-self.tax)
         self.get_mrg=lambda n,p:n*p*self.rto*self.npr/100    
-     
-    def get_name(self,name):
+
+    def parse_name(self,name):
         name=name.split('|')[-1]
         print(name)
         self.drt=(name[-1:]=='-') and -1 or 1
@@ -98,16 +98,25 @@ class contract(metaclass=singleton):
         for ([i],) in div:
             yield (start,i)
             start=i
-        yield (start,-1)
+        yield (start,len(src))
 
     @elapse
     def element(self,src,sign):
         sign_iter=np.nditer(sign.src)
         for i,j in self.divide(src.idx,sign.idx):
-            src.plus[i:j]=self.get_prf(self.pst,src.src[i:j,3]-self.avgp)+self.fri
+            a=self.get_prf(self.pst,src.src[i:j,3]-self.avgp)+self.fri
+            b=self.get_mrg(self.pst,src.src[i:j,3])
+            c=np.concatenate((a,b)).reshape((2,j-i)).T
+            # print(src.plus.shape,c.shape)
+            if src.plus.shape!=(0,):
+                src.plus=np.concatenate((src.plus,c))
+            else:
+                src.plus=c
             if i==0: continue
-            self.ocsc(sign_iter.__next__(),src.idx[i],1,src.src[i,3])
-
+            
+            self.ocsc(sign_iter[0],src.idx[i],1,src.src[i,3])
+            sign_iter.iternext()
+            # self.ocsc(sign_iter.__next__(),src.idx[i],1,src.src[i,3])
 
 dname=os.path.split(os.path.realpath(__file__))[0]+'\me.s3db'
 def get_info(name):    
@@ -155,7 +164,7 @@ class source():
     def __init__(self,src,idx):
         self.src=src
         self.idx=idx
-        self.plus=np.zeros(len(src))
+        self.plus=np.array([])
 
 @elapse
 def main02():
@@ -172,9 +181,9 @@ def main02():
     ts=pta.element(m15,idx) 
     # print(m15.plus)
 
-    import matplotlib.pyplot as plt
-    plt.plot(m15.plus)
-    plt.show()
+    # import matplotlib.pyplot as plt
+    # plt.plot(m15.plus)
+    # plt.show()
   
 
 
@@ -205,6 +214,6 @@ if __name__=="__main__":
     np.seterr(invalid='ignore')
     db=cbase(os.path.split(os.path.realpath(__file__))[0]+'\me.s3db')
     s=['op', 'hi', 'lo', 'cl', 'vol']    
-    db.merge_data('m1505',['2008-12-01 00:00:00','2008-12-20 23:00:00'],clms=s)
+    db.merge_data('m1505',['2008-12-01 00:00:00','2008-12-02 23:00:00'],clms=s)
     # main()
     main02()
