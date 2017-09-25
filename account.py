@@ -48,6 +48,7 @@ class contract(metaclass=singleton):
         self.fri=0
         self.pst=0
         self.avgp=0
+        self.plus=np.array([])
         
         self.npr,self.tax,self.rto=get_info(self.parse_name(name))
 
@@ -62,12 +63,12 @@ class contract(metaclass=singleton):
         self.drt=(name[-1:]=='-') and -1 or 1
         return name[:-1]
 
-    def refresh(self,prs):
-        # self.mrg=0
-        self.prf=0
-        for _,n,p in self.tank:
-            self.prf+=self.get_prf(n,prs-p)
-            # self.mrg+=self.get_mrg(n,prs)
+    # def refresh(self,prs):
+    #     # self.mrg=0
+    #     self.prf=0
+    #     for _,n,p in self.tank:
+    #         self.prf+=self.get_prf(n,prs-p)
+    #         # self.mrg+=self.get_mrg(n,prs)
 
     def lump(self):
         cum=cnt=0
@@ -107,11 +108,10 @@ class contract(metaclass=singleton):
             a=self.get_prf(self.pst,src.src[i:j,3]-self.avgp)+self.fri
             b=self.get_mrg(self.pst,src.src[i:j,3])
             c=np.concatenate((a,b)).reshape((2,j-i)).T
-            # print(src.plus.shape,c.shape)
-            if src.plus.shape!=(0,):
-                src.plus=np.concatenate((src.plus,c))
+            if self.plus.shape!=(0,):
+                self.plus=np.concatenate((self.plus,c))
             else:
-                src.plus=c
+                self.plus=c
             if i==0: continue
             
             self.ocsc(sign_iter[0],src.idx[i],1,src.src[i,3])
@@ -164,7 +164,12 @@ class source():
     def __init__(self,src,idx):
         self.src=src
         self.idx=idx
-        self.plus=np.array([])
+
+    def union(self,other):
+        pass
+
+    def chk(self,idx):
+        pass
 
 @elapse
 def main02():
@@ -182,7 +187,7 @@ def main02():
     # print(m15.plus)
 
     # import matplotlib.pyplot as plt
-    # plt.plot(m15.plus)
+    # plt.plot(pta.plus)
     # plt.show()
   
 
