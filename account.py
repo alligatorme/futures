@@ -1,25 +1,12 @@
 from dbase import cbase
-from attach import elapse
+from attach import elapse,singleton
 from collections import deque
 import os,sqlite3
 import numpy as np
 import pandas as pd
 import talib
 # from talib.abstract import *
-class singleton(type):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__cache = {} #weakref.WeakValueDictionary()
 
-    def __call__(self, *args):
-        cname=args[0]
-        # print(cname)
-        if cname in self.__cache:
-            return self.__cache[cname]
-        else:
-            obj = super().__call__(*args)
-            self.__cache[cname] = obj
-            return obj
 
 class account(metaclass=singleton):
     def __init__(self,name):
@@ -62,7 +49,7 @@ class contract(metaclass=singleton):
         self.drt=(name[-1:]=='-') and -1 or 1
         return name[:-1]
 
-    def lump(self):
+    def update(self):
         cum=cnt=0
         for _,n,p in self.tank:
             cum+=n*p
@@ -79,7 +66,7 @@ class contract(metaclass=singleton):
                 self.fri+=self.get_prf(min(n,n0),p-p0)
                 n-=n0
                 if n<0: self.tank.append((t0,-n,p0))
-        self.lump()
+        self.update()
     
     def divide(self,src,idx):
         div=(np.where(src==i) for i in idx)
