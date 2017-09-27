@@ -1,6 +1,12 @@
 import time,datetime
 from functools import wraps
 
+OPEN=0
+HIGH=1
+LOW=2
+CLOSE=3
+VOLUME=4
+
 # @functools.wraps
 def elapse(func):
 	@wraps(func)

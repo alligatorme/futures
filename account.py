@@ -1,5 +1,6 @@
 from dbase import cbase
-from attach import elapse,singleton
+# import attach
+from attach import *
 from collections import deque
 import os,sqlite3
 import numpy as np
@@ -80,8 +81,8 @@ class contract(metaclass=singleton):
     def element(self,src,sign):
         sign_iter=np.nditer(sign.src)
         for i,j in self.divide(src.idx,sign.idx):
-            a=self.get_prf(self.pst,src.src[i:j,3]-self.avgp)+self.fri
-            b=self.get_mrg(self.pst,src.src[i:j,3])
+            a=self.get_prf(self.pst,src.src[i:j,CLOSE]-self.avgp)+self.fri
+            b=self.get_mrg(self.pst,src.src[i:j,CLOSE])
             c=np.concatenate((a,b)).reshape((2,j-i)).T
             if self.plus.shape!=(0,):
                 self.plus=np.concatenate((self.plus,c))
