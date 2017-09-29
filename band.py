@@ -7,9 +7,17 @@ class puzzle():
         pass
 
 def overlap(st,nd):
-    rst=[st[0],st[-1],nd[0],nd[-1]]
-    rst.sort()
-    return rst[1],rst[2]
+	loc=lambda i,j: np.where(i.idx==j)
+	a1,a2,b1,b2=st.idx[0],st.idx[-1],nd.idx[0],nd.idx[-1]
+	if a1<b1<a2:
+		bg=loc(st,b1)
+		ed=loc(nd,a2)
+		return bg,ed
+	# if b1<a1<b2: 
+	# 	return a1,b2
+    
+    return None,None 
+
 
 @elapse
 def smooth(st,nd):
@@ -23,6 +31,8 @@ def smooth(st,nd):
     src=np.concatenate((st.src[:-t],nd.src[n:]))
     idx=np.concatenate((st.idx[:-t],nd.idx[n:]))
     return source(src,idx)
+
+def
 
     
     
