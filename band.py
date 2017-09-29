@@ -1,17 +1,6 @@
 from attach import *
 import numpy as np
 
-class source():
-    def __init__(self,src,idx):
-        self.src=src
-        self.idx=idx
-
-    def smooth(self,other):
-        pass
-
-    def chk(self,idx):
-        pass
-
 
 class puzzle():
     def __init__():
@@ -22,11 +11,21 @@ def overlap(st,nd):
     rst.sort()
     return rst[1],rst[2]
 
-def smooth(src,bg,ed):
-    bg=np.where(src.idx==bg)
-    ed=np.where(src.idx==ed)
-    src.src[bg:ed,VOLUME]
+@elapse
+def smooth(st,nd):
+    # st=1st|nd=2nd|ed=end|bg=begin
+    loc=lambda i,j: np.where(i.idx==j)
+    bg,ed=overlap(st.idx,nd.idx)
+    stc=np.cumsum(st.src[loc(st,bg):loc(st,ed),VOLUME])
+    ndc=np.cumsum(nd.src[loc(nd,bg):loc(nd,ed),VOLUME])
+    n=np.argmax(np.absolute(stc-ndc))+1
+    t=len(stc)-n
+    src=np.concatenate((st.src[:-t],nd.src[n:]))
+    idx=np.concatenate((st.idx[:-t],nd.idx[n:]))
+    return source(src,idx)
 
+    
+    
 if __name__=="__main__":
     a=np.arange('2005-02-01', '2005-03-01', dtype='datetime64[D]')
     b=np.arange('2005-02-20', '2005-03-20', dtype='datetime64[D]')

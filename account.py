@@ -131,16 +131,7 @@ def stg(t):
     if t.dtype!=float: t=t.astype('float')
     return talib.SMA(t,7)-talib.SMA(t,20)
 
-class source():
-    def __init__(self,src,idx):
-        self.src=src
-        self.idx=idx
 
-    def union(self,other):
-        pass
-
-    def chk(self,idx):
-        pass
 
 @elapse
 def main02():

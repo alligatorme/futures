@@ -41,3 +41,16 @@ class singleton(type):
             obj = super().__call__(*args)
             self.__cache[cname] = obj
             return obj
+
+class source():
+    def __init__(self,src,idx):
+        self.src=src
+        self.idx=idx
+
+    def union(self,other):
+        pass
+
+    def chk(self,idx):
+        pass
+
+       
