@@ -15,8 +15,11 @@ def overlap(st,nd):
     if a1<b1<a2:
         bg=loc(st,b1)[0][0]
         ed=loc(nd,a2)[0][0]
-        for i,j in zip(st.idx[bg:],nd.idx[:ed]):
-            print(i,j)
+        stc=st.idx[bg:]
+        ndc=nd.idx[:ed]
+        olc=np.union1d(stc,ndc)
+        # for i,j in zip(st.idx[bg:],nd.idx[:ed]):
+        #     print(i,j)
         stc=np.cumsum(st.src[bg:,VOLUME])
         ndc=np.cumsum(nd.src[:ed,VOLUME])
         print(len(stc),len(ndc))
@@ -37,9 +40,6 @@ def smooth(part):
         src.append(p.src[i:j])
         idx.append(p.idx[i:j])
     return source(np.concatenate(src),np.concatenate(idx))
-
-
-
     
     
 if __name__=="__main__":
