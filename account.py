@@ -70,12 +70,17 @@ class contract(metaclass=singleton):
         self.update()
     
     def divide(self,src,idx):
-        div=(np.where(src==i) for i in idx)
-        start=0
-        for ([i],) in div:
-            yield (start,i)
-            start=i
-        yield (start,len(src))
+        # div=(np.where(src==i) for i in idx)
+        # start=0
+        # for ([i],) in div:
+        #     yield (start,i)
+        #     start=i
+        # yield (start,len(src))
+        
+        div=[np.where(src==i)[0][0] for i in idx]
+        div.insert(0,0)
+        div.append(len(src))
+        return zip(div[:-1],div[1:])
 
     @elapse
     def element(self,src,sign):
@@ -104,13 +109,7 @@ def get_info(name):
     dbase.close
     return rt
 #*****************************************************************************************
-def shift(rst,n):
-    na=np.zeros(abs(n))
-    na[:]=np.nan
-    if n>0:
-        return np.append(na,rst[:-n])
-    else:
-        return np.append(rst[-n:],na)
+
 
 @elapse
 def cross(rst):    

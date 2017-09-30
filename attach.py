@@ -1,5 +1,6 @@
 import time,datetime
 from functools import wraps
+import numpy as np
 
 OPEN=0
 HIGH=1
@@ -41,6 +42,14 @@ class singleton(type):
             obj = super().__call__(*args)
             self.__cache[cname] = obj
             return obj
+
+def shift(rst,n,dft=np.nan):
+    na=np.zeros(abs(n))
+    na[:]=dft
+    if n>0:
+        return np.append(na,rst[:-n])
+    else:
+        return np.append(rst[-n:],na)
 
 class source():
     def __init__(self,src,idx):
