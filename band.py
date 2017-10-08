@@ -1,31 +1,49 @@
 from attach import *
 import numpy as np
+import pandas as pd
 from dbase import cbase
 import os,sqlite3
+import talib
 
 
 class puzzle():
     def __init__():
         pass
 
+# def overlap(st,nd):
+#     # st=1st|nd=2nd|ed=end|bg=begin
+#     loc=lambda i,j: np.where(i.idx==j)[0][0]
+#     a1,a2,b1,b2=st.idx[0],st.idx[-1],nd.idx[0],nd.idx[-1]
+#     if a1<b1<a2:
+#         bg=loc(st,b1)
+#         ed=loc(nd,a2)
+#         stc=st.idx[bg:]
+#         ndc=nd.idx[:ed]
+#         olc=np.union1d(stc,ndc)
+#         # for i,j in zip(st.idx[bg:],nd.idx[:ed]):
+#         #     print(i,j)
+#         stc=np.cumsum(st.src[bg:,VOLUME])
+#         ndc=np.cumsum(nd.src[:ed,VOLUME])
+#         print(len(stc),len(ndc))
+#         n=np.argmax(np.absolute(stc-ndc))+1
+#         print(n)
+#         return [n-len(stc),n]
+
 def overlap(st,nd):
-    # st=1st|nd=2nd|ed=end|bg=begin
-    loc=lambda i,j: np.where(i.idx==j)
+    loc=lambda i,j: np.where(i.idx==j)[0][0]
     a1,a2,b1,b2=st.idx[0],st.idx[-1],nd.idx[0],nd.idx[-1]
     if a1<b1<a2:
-        bg=loc(st,b1)[0][0]
-        ed=loc(nd,a2)[0][0]
-        stc=st.idx[bg:]
-        ndc=nd.idx[:ed]
-        olc=np.union1d(stc,ndc)
-        # for i,j in zip(st.idx[bg:],nd.idx[:ed]):
-        #     print(i,j)
-        stc=np.cumsum(st.src[bg:,VOLUME])
-        ndc=np.cumsum(nd.src[:ed,VOLUME])
-        print(len(stc),len(ndc))
-        n=np.argmax(np.absolute(stc-ndc))+1
-        print(n)
-        return [n-len(stc),n]
+        bg=loc(st,b1)
+        ed=loc(nd,a2)
+        stc=pd.DataFrame(st.src[bg:,VOLUME],index=st.idx[bg:],columns=['st'])
+        ndc=pd.DataFrame(nd.src[:ed,VOLUME],index=nd.idx[:ed],columns=['nd'])
+        ovr=stc.join(ndc)
+        ovr.fillna(method='ffill',inplace=True)
+        ovr=ovr.st-ovr.nd
+        
+        # print(talib.SMA(ovr.values,7))
+        plt.plot(talib.SMA(ovr.values,7),'x')
+        plt.show()
 
 
 @elapse
@@ -48,15 +66,20 @@ if __name__=="__main__":
     # print(overlap(a,b))
 
     db=cbase(os.path.split(os.path.realpath(__file__))[0]+'\szd.s3db')
-    s=['op', 'hi', 'lo', 'cl', 'vl']    
-    db.merge_data('DLa0801',['2006-07-26','2008-01-15'],clms=s)
-    db.merge_data('DLa0805',['2006-11-15','2008-05-16'],clms=s)
-    db.merge_data('DLa0809',['2007-03-20','2008-09-12'],clms=s)
-    m1=source(db.data['DLa0801'].values,db.data['DLa0801'].index.values)
-    m2=source(db.data['DLa0805'].values,db.data['DLa0805'].index.values)
-    m3=source(db.data['DLa0809'].values,db.data['DLa0809'].index.values)
-    mrk=smooth([m1,m2,m3])
+    clms=['op', 'hi', 'lo', 'cl', 'vl']
+    mrk=[]    
 
-    # import matplotlib.pyplot as plt
-    # plt.plot(pta.plus)
-    # plt.show()
+    import matplotlib.pyplot as plt
+    sp=['DLa1001','DLa1005','DLa1009','DLa1101','DLa1105','DLa1109']
+    # ,'DLa1201','DLa1205','DLa1209','DLa1301','DLa1305','DLa1309'
+    for i in sp:
+        db.merge_data(i,['2008-01-01','2013-12-31'],clms=clms)
+        sgl=source(db.data[i].values,db.data[i].index.values)
+        mrk.append(sgl)
+        plt.plot(sgl.idx[:-30],sgl.src[:-30,VOLUME])
+        # plt.plot(sgl.idx,talib.SMA(sgl.src[:,VOLUME],17))
+    # mrk=smooth(mrk)
+    # plt.axhline(y=100000,ls='--')
+    # plt.axhline(y=50000,ls='--')
+    # plt.yscale('log')
+    plt.show()

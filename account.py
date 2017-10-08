@@ -8,7 +8,6 @@ import pandas as pd
 import talib
 # from talib.abstract import *
 
-
 class account(metaclass=singleton):
     def __init__(self,name):
         self.name=name
