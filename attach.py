@@ -36,12 +36,10 @@ class singleton(type):
     def __call__(self, *args):
         cname=args[0]
         # print(cname)
-        if cname in self.__cache:
-            return self.__cache[cname]
-        else:
+        if cname not in self.__cache:
             obj = super().__call__(*args)
             self.__cache[cname] = obj
-            return obj
+        return self.__cache[cname]
 
 def shift(rst,n,dft=np.nan):
     na=np.zeros(abs(n))
