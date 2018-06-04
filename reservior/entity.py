@@ -4,3 +4,4 @@ class EntityBase():
 		self.symbol=''
 		self.exchange=''
 		self.gateway=''
+		self.rawData={}
