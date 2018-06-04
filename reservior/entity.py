@@ -5,3 +5,7 @@ class EntityBase():
 		self.exchange=''
 		self.gateway=''
 		self.rawData={}
+
+class EntityBar(EntityBase):
+	def __init__():
+
