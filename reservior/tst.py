@@ -14,7 +14,7 @@ def get_var():
        tp=pkl.load(fd)
    return tp
 
-# save_var(ts.get_czce_daily(date='2018-06-06', type="future"))
+save_var(ts.get_dce_daily(date='2018-06-06', type="future"))
 print(get_var())
 # print(ts.get_dce_daily(date='2018-06-06', type="future"))
 # print(ts.get_shfe_daily(date='2018-06-06'))
