@@ -19,21 +19,25 @@ def get_var():
 #print(get_var())
 #print(ts.get_czce_daily(date='2018-06-06', type="future"))
 # print(ts.get_shfe_daily(date='2018-06-06'))
-# src={'dce':'future','czce':'future','shfe':None}
-# day='2018-06-06'
-# for k,v in src.items():
-# 	factor={}
-# 	factor['date']=day
-# 	if v: factor['type']=v
-# 	func=ts.__dict__['get_'+k+'_daily']
-# 	print(func(**factor).head())
 
-def serial_date(end,begin=None):
-	day=begin or datetime.datetime.now()
-	while day>end:
-		if day.weekday()-5<0:
-			yield day.strftime('%Y-%m-%d')
-		day=day-datetime.timedelta(days=1)
 
-x=serial_date(end=datetime.datetime(2018, 5, 2))
-for i in x: print(i)
+# def serial_date(begin=None,end=datetime.datetime(2000, 1, 1)):
+# 	day=begin or datetime.datetime.now()
+# 	while day>=end:
+# 		if day.weekday()-5<0:
+# 			yield day.strftime('%Y-%m-%d')
+# 		day=day-datetime.timedelta(days=1)
+
+# x=serial_date(end=datetime.datetime(2018, 5, 2))
+# for i in x: print(i)
+
+def get_raw(day='2014-06-19'):
+	src={'dce':'future','shfe':None,'czce':'future'}
+	for k,v in src.items():
+		factor={}
+		factor['date']=day
+		if v: factor['type']=v
+		func=ts.__dict__['get_'+k+'_daily']
+		print(k,'----')
+		print(func(**factor))
+get_raw()
