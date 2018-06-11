@@ -31,7 +31,7 @@ def get_var():
 # x=serial_date(end=datetime.datetime(2018, 5, 2))
 # for i in x: print(i)
 
-def get_raw(day='2014-06-19'):
+def get_raw(day='2016-06-22'):
 	src={'dce':'future','shfe':None,'czce':'future'}
 	for k,v in src.items():
 		factor={}
@@ -39,5 +39,5 @@ def get_raw(day='2014-06-19'):
 		if v: factor['type']=v
 		func=ts.__dict__['get_'+k+'_daily']
 		print(k,'----')
-		print(func(**factor))
+		print(func(**factor).head())
 get_raw()

@@ -27,7 +27,7 @@ def elapse(func):
 		return tmp
 	return wrapped
 
-
+# import weakref
 class singleton(type):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

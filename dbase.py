@@ -1,23 +1,7 @@
 import sqlite3,os
 import pandas as pd
-from attach import elapse
+from attach import elapse,singleton
 
-
-# import weakref
-class singleton(type):
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self.__cache = {} #weakref.WeakValueDictionary()
-
-	def __call__(self, *args):
-		cname=args[0]
-		# print(cname)
-		if cname in self.__cache:
-			return self.__cache[cname]
-		else:
-			obj = super().__call__(*args)
-			self.__cache[cname] = obj
-			return obj
 
 class cbase(metaclass=singleton):	
 	def __init__(self,dname):
