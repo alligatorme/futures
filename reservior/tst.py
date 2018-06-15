@@ -5,7 +5,7 @@ import datetime
 # print(type(ts.__dict__))
 # for k,v in ts.__dict__.items():
 # 	print(k,v)
- 
+
 def save_var(v):
    with open('var.pkl','wb') as fd:
        pkl.dump(v,fd)
