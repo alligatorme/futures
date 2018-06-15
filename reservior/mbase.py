@@ -13,8 +13,8 @@ ROWS_MARK=['?' for i in range(len(ROWS))]
 COLUMN_DEFINE=','.join(list(' '.join(i) for i in zip(ROWS,ROWS_TYPE)))
 
 class mbase():#metaclass=singleton
-	def __init__(self,file):
-		if file: self.base=sqlite3.connect(file)
+	def __init__(self,fn):
+		if fn: self.base=sqlite3.connect(fn)
 
 	def row_in(self,symbol,row):
 		sql="insert into %s (%s) values (%s)"%(symbol,','.join(ROWS),','.join(ROWS_MARK)) 
