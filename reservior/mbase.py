@@ -2,15 +2,15 @@ import pickle as pkl
 import sqlite3, os
 
 def get_var():
-   with open('var.pkl','rb') as fd:
-       tp=pkl.load(fd)
-   return tp
+	with open('var.pkl','rb') as fd:
+		tp=pkl.load(fd)
+	return tp
 
 ROWS=['date','open','high','low','close','volume','open_interest','turnover','settle']
 
 ROWS_TYPE=['DATE','INT','INT','INT','INT','INTEGER','INTEGER','INTEGER','INT']
 ROWS_MARK=['?' for i in range(len(ROWS))]
-COLUMN_DEFINE=','.join(list(' '.join(i) for i in zip(ROWS,ROWS_TYPE)))
+COLUMN_DEFINE=', '.join(list(' '.join(i) for i in zip(ROWS,ROWS_TYPE)))
 
 class mbase():#metaclass=singleton
 	def __init__(self,fn):
@@ -18,10 +18,14 @@ class mbase():#metaclass=singleton
 
 	def row_in(self,symbol,row):
 		sql="insert into %s (%s) values (%s)"%(symbol,','.join(ROWS),','.join(ROWS_MARK)) 
-		self.base.excute(sql,row)
+		self.base.execute(sql,row)
 
 	def create_table(self,symbol):
 		sql="create table if not exists %s (%s)"%(symbol,COLUMN_DEFINE+', PRIMARY KEY (date)')
+		self.base.execute(sql)
+
+	def leave(self):
+		self.base.close()
 
 if __name__=="__main__":
 	# print(ROWS)
@@ -29,3 +33,6 @@ if __name__=="__main__":
 	symbol='A1009'
 	sql="create table if not exists %s (%s)"%(symbol,COLUMN_DEFINE+', PRIMARY KEY (date)')
 	print(sql)
+#	sd=mbase('temp.db')
+#	sd.create_table(symbol)
+#	sd.leave()
