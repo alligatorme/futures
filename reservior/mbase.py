@@ -4,9 +4,10 @@ import pandas as pd
 import numpy as np
 
 def row_new(dst,src):
-	if not np.any(src-dst):return false
-#		if np.all((src[1:]-rst)>=0):
-
+	if not np.any(src-dst):
+		return false
+	else:
+		return true
 def row_valid(src):
 	if isinstance(src,list):src=np.array(src)
 	return np.all(src>=0)
@@ -15,6 +16,9 @@ ROWS=['date','open','high','low','close','volume','open_interest','turnover','se
 
 ROWS_TYPE=['DATE','REAL','REAL','REAL','REAL','INTEGER','INTEGER','INTEGER','REAL']
 COLUMN_DEFINE=', '.join(list(' '.join(i) for i in zip(ROWS,ROWS_TYPE)))
+
+col=lambda x:','.join(x)
+col_mrk=lambda x:','.join(['?' for i in range(len(x))])
 
 class mbase():#metaclass=singleton
 	def __init__(self,fn):
@@ -40,20 +44,17 @@ class mbase():#metaclass=singleton
 		for i in src.iterrows():
 			row=list(i[1])
 			self.create_table(row[0])
-			self.row_in(row[0],row[1:])
+			self.row_update(row[0],row[1:])
 
-	def row_update(self,src):
-#		symbol=src[0]
-#		date=src[1]
-		col=lambda x:','.join(x)
-		sql="select %s from %s where date=%s"%(col(ROWS[1:]),src[0],src[1])
+	def row_update(self,symbol,row):
+		sql="select %s from %s where date=%s"%(col(ROWS[1:]),symbol,row[0])
 		rst=self.base.execute(sql).fetchone()
-		if row_new(list(rst),src[1:]):
-			sql="replace into %s (%s) values (%s)"%(src[0],col(ROWS),','.join(['?' for i in range(len(col(ROWS)))]))
-			self.base.execute(sql,src[1:])
-			return true
-		else:
-			return false
+		if not rst or row_new(list(rst),row[1:]):
+			sql="replace into %s (%s) values (%s)"%(symbol,col(ROWS),col_mrk(ROWS))
+			self.base.execute(sql,row)
+#			return true
+#		else:
+#			return false
 
 	def leave(self):
 		self.base.commit()
@@ -69,8 +70,8 @@ def main02():
 #	print(rst)
 
 def main01():
-#	sd.clean_table()
-#	sd.get_tables()
+	sd.clean_table()
+	sd.get_tables()
 	tk=taken.market()
 	ab=['symbol']
 	ab.extend(ROWS)
@@ -83,6 +84,6 @@ def main01():
 
 if __name__=="__main__":
 	sd=mbase('temp.db')
-	main02()
+	main01()
+#	main02()
 	sd.leave()
-
