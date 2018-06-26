@@ -19,6 +19,7 @@ def serial_date(end,begin=None):
 			yield day.strftime('%Y-%m-%d')
 		day-=datetime.timedelta(days=1)
 
+
 class market():
 	def __init__(self):
 		self.src={'dce':'future','shfe':None,'czce':'future'}
