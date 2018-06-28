@@ -22,7 +22,7 @@ def serial_date(end,begin=None):
 
 class market():
 	def __init__(self):
-		self.src={'dce':'future','shfe':None,'czce':'future'}
+		self.src={'shfe':None,'dce':'future','czce':'future'}
 
 	def raw_daily(self,day):
 		for k,v in self.src.items():
@@ -33,5 +33,9 @@ class market():
 			yield func(**factor)
 
 if __name__=="__main__":
-	for i in serial_date():
+#	for i in serial_date():
+#		print(i)
+#	print(get_var())
+	mkt=market()
+	for i in mkt.raw_daily('2018-06-26'):
 		print(i)
