@@ -1,0 +1,4 @@
+cd ~/bridge
+./tnl out
+export http_proxy=127.0.0.1:2032
+sudo systemctl restart privoxy.service
