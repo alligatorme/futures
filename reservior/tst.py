@@ -22,7 +22,7 @@ def main01():
 	tk=taken.market()
 	ab=['symbol']
 	ab.extend(mbase.ROWS)
-	for i in taken.serial_date(begin='2013-10-17',end='2008-01-01'):
+	for i in taken.serial_date(begin='2013-02-21',end='2008-01-01'):
 		print(i)
 		rst=[]
 		for j in tk.raw_daily(i):

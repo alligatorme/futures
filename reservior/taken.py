@@ -22,7 +22,8 @@ def serial_date(end,begin=None):
 
 class market():
 	def __init__(self):
-		self.src={'shfe':None,'dce':'future','czce':'future'}
+#		self.src={'shfe':None,'dce':'future','czce':'future'}
+		self.src={'dce':'future','czce':'future','shfe':None}
 
 	def raw_daily(self,day):
 		for k,v in self.src.items():
