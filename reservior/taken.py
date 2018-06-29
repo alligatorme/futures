@@ -1,13 +1,13 @@
 import tushare as ts
-import datetime
+import datetime,os
 
 import pickle as pkl
-def save_var(v):
+def save_var(v,n='var.pkl'):
 	with open('var.pkl','wb') as fd:
 		pkl.dump(v,fd)
 
-def get_var():
-	with open('var.pkl','rb') as fd:
+def get_var(n='var.pkl'):
+	with open(n,'rb') as fd:
 		tp=pkl.load(fd)
 	return tp
 
@@ -31,6 +31,11 @@ class market():
 			if v: factor['type']=v
 			func=ts.__dict__['get_'+k+'_daily']
 			yield func(**factor)
+
+	def raw_file(self,drt=None):
+		for i in os.listdir(drt):
+			if isinstance(i,str) and re.match('\d{4}-\d{2}-\d{2}',i):
+				yield get_var(i)
 
 if __name__=="__main__":
 #	for i in serial_date():
