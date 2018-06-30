@@ -1,5 +1,5 @@
 import tushare as ts
-import datetime,os
+import datetime,os,re
 
 import pickle as pkl
 def save_var(v,n='var.pkl'):
@@ -34,9 +34,10 @@ class market():
 			yield func(**factor)
 
 	def raw_file(self,drt=None):
-		for i in os.listdir(drt):
+		for i in sorted(os.listdir(drt)):
 			if isinstance(i,str) and re.match('\d{4}-\d{2}-\d{2}',i):
-				yield get_var(i)
+				print(i)
+				yield get_var(drt+'/'+i)
 
 if __name__=="__main__":
 #	for i in serial_date():

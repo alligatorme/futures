@@ -33,8 +33,20 @@ def main01():
 #				for i in j.iterrows():
 #					print(list(i[1])[0],end='\t')
 
+def main04():
+	sd.clean_table()
+	sd.get_tables()
+	tk=taken.market()
+	ab=['symbol']
+	ab.extend(mbase.ROWS)
+	for j in tk.raw_file('/home/raptor/rsvr/db'):
+		if isinstance(j,pd.core.frame.DataFrame):
+			sd.day_in(j[ab])
+#			print(j.head(1))
+
 if __name__=="__main__":
 	sd=mbase.mbase('raw.db')
+#	main04()
 	main01()
 #	main02()
 #	main03()

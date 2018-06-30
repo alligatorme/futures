@@ -13,6 +13,7 @@ class info(configparser.ConfigParser):
 		self.cfg=cfg
 		self.raw=sqlite3.connect(raw)
 #		self.fine=sqlite3.connect(fine)
+#		self.cnt=0
 
 	def init_config(self):
 		rst=self.raw.execute("select name from sqlite_master where type='table' order by name")
@@ -41,6 +42,7 @@ class info(configparser.ConfigParser):
 			tsr=[]
 			for i in v:
 				sql="select volume from %s"%(i)
+#				self.cnt+=1
 				rst=self.raw.execute(sql).fetchall()
 				tsr.extend([i[0] for i in rst])
 			wt[k]=avg(tsr)
@@ -53,6 +55,7 @@ class info(configparser.ConfigParser):
 		for i in symbol:
 			print(i,30*'*')
 			self.pick(i)
+#		print(self.cnt)
 
 
 	def optionxform(self,optionstr):
