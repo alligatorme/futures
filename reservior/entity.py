@@ -13,7 +13,6 @@ class info(configparser.ConfigParser):
 		self.cfg=cfg
 		self.raw=sqlite3.connect(raw)
 #		self.fine=sqlite3.connect(fine)
-#		self.cnt=0
 
 	def init_config(self):
 		rst=self.raw.execute("select name from sqlite_master where type='table' order by name")
@@ -33,8 +32,6 @@ class info(configparser.ConfigParser):
 			else:
 				tsr[mk]=[j]
 		return tsr
-#			for k,v in tsr.items():print(k,'=',v) 
-#			self.set(MARK,i,self.pick(tsr))
 
 	def pick(self,symbol):
 		wt={}
@@ -42,21 +39,20 @@ class info(configparser.ConfigParser):
 			tsr=[]
 			for i in v:
 				sql="select volume from %s"%(i)
-#				self.cnt+=1
 				rst=self.raw.execute(sql).fetchall()
 				tsr.extend([i[0] for i in rst])
 			wt[k]=avg(tsr)
-		for k,v in sorted(wt.items(),key=lambda d:d[1],reverse=True):
-			print(k,'=',v)
+#		for k,v in sorted(wt.items(),key=lambda d:d[1],reverse=True):
+#			print(k,'=',v)
+		rst=[k for k,v in sorted(wt.items(),key=lambda d:d[1],reverse=True)]
+		return rst
 
 	def dominant(self,symbol=[]):
 		if not symbol:symbol=self.options(MARK)
 		if not isinstance(symbol,list):symbol=[symbol]
 		for i in symbol:
 			print(i,30*'*')
-			self.pick(i)
-#		print(self.cnt)
-
+			self.set(MARK,i,','.join(self.pick(i)))
 
 	def optionxform(self,optionstr):
 		return optionstr
