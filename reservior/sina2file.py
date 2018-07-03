@@ -1,7 +1,7 @@
 import pandas as pd
 import mbase,taken
 import pickle as pkl
-import requests
+import requests,os
 #import entity
 
 def save_var(n,v):
@@ -34,13 +34,14 @@ def single(symbol):
 def sina():
 	import entity
 	info=entity.info()
+	drt='/home/raptor/rsvr/sina/'
 	for k,v in info.items('Dominant'):
 		for nod in v.split(',')[:3]:
-			for i in range(19).reverse():
+			for i in range(19,-1,-1):
 				symbol=k+str(i).zfill(2)+nod
-#				print(symbol)
-				rst=single(symbol)
-				if rst: save_var(symbol,rst)
+				if not symbol in os.listdir(drt):
+					rst=single(symbol)
+					save_var(drt+symbol,rst)
 
 
 

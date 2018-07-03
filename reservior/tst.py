@@ -1,9 +1,9 @@
 import requests
 import re
 #import json
-symbol='A0701'
-url='http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol='+symbol
-rst=requests.get(url)
+#symbol='A0701'
+#url='http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol='+symbol
+#rst=requests.get(url)
 #print(type(rst))
 
 def xfer(x):
@@ -14,6 +14,14 @@ def xfer(x):
 	if '.' in x:return float(x)
 	return int(x)
 
-for i in rst.json():
-	print(list(map(xfer,i)))
+#for i in rst.json():
+#	print(list(map(xfer,i)))
 #	print(i)
+import pickle as pkl
+def get_var(n='var.pkl'):
+	with open(n,'rb') as fd:
+		tp=pkl.load(fd)
+	return tp
+
+rst=get_var('/home/raptor/rsvr/sina/ZN1501')
+print(rst)

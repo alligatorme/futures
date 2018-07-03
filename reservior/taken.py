@@ -39,6 +39,16 @@ class market():
 				print(i)
 				yield get_var(drt+'/'+i)
 
+	def sina_file(self,drt='/home/raptor/rsvr/sina/'):
+		import entity
+		info=entity.info()
+		for k,v in info.items('Sina'):
+			for nod in v.split(','):
+				for i in range(19,-1,-1):
+					symbol=k+str(i).zfill(2)+nod
+					if symbol in os.listdir(drt):
+						yield get_var(drt+symbol)
+
 if __name__=="__main__":
 #	for i in serial_date():
 #		print(i)

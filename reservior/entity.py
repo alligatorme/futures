@@ -11,7 +11,7 @@ class info(configparser.ConfigParser):
 		if os.path.exists(cfg):
 			self.read(cfg)
 		self.cfg=cfg
-		self.raw=sqlite3.connect(raw)
+#		self.raw=sqlite3.connect(raw)
 #		self.fine=sqlite3.connect(fine)
 
 	def init_config(self):
