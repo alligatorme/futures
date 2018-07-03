@@ -64,8 +64,8 @@ class mbase():#metaclass=singleton
 		self.raw.execute("vacuum")
 
 if __name__=="__main__":
-#	pass
-	sd=mbase('info.db')
-	ROWS=ROWS[:6]
-	print(ROWS)
-	sd.leave()
+	pass
+#	sd=mbase('info.db')
+#	ROWS=ROWS[:6]
+#	print(ROWS)
+#	sd.leave()
