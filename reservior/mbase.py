@@ -45,6 +45,10 @@ class mbase():#metaclass=singleton
 			if row[0][-3:].isdigit():self.row_update(row[0],row[1:])
 		self.raw.commit()
 
+	def symbol_in(self,symbol,src):
+		for row in src:
+			self.row_update(symbol,row)
+
 	def row_update(self,symbol,row):
 		symbol=self.create_table(symbol,row[0])
 		sql="select %s from %s where date=%s"%(col(self.rows[1:]),symbol,row[0])

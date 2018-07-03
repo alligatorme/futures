@@ -71,22 +71,23 @@ def main01():
 #					print(list(i[1])[0],end='\t')
 
 def main04():
+	sd.raw=sd.raw[:6]
 	sd.clean_table()
 	sd.get_tables()
 	tk=taken.market()
 	ab=['symbol']
 	ab.extend(mbase.ROWS)
-	for j in tk.raw_file('/home/raptor/rsvr/db'):
-		if isinstance(j,pd.core.frame.DataFrame):
+	for j in tk.sina_file():
+		if isinstance(j,List):
 			sd.day_in(j[ab])
 #			print(j.head(1))
 
 if __name__=="__main__":
-#	sd=mbase.mbase('raw.db')
-#	main04()
+	sd=mbase.mbase('sina.db')
+	main04()
 #	main01()
-	sina()
+#	sina()
 #	print(single('A0201'))
 #	main02()
 #	main03()
-#	sd.leave()
+	sd.leave()
