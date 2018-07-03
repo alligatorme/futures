@@ -71,16 +71,16 @@ def main01():
 #					print(list(i[1])[0],end='\t')
 
 def main04():
-	sd.raw=sd.raw[:6]
+	sd.rows=sd.rows[:6]
+	sd.rowstype=sd.rowstype[:6]
 	sd.clean_table()
 	sd.get_tables()
 	tk=taken.market()
-	ab=['symbol']
-	ab.extend(mbase.ROWS)
-	for j in tk.sina_file():
-		if isinstance(j,List):
-			sd.day_in(j[ab])
-#			print(j.head(1))
+#	ab=['symbol']
+#	ab.extend(mbase.ROWS)
+	for symbol,j in tk.sina_file():
+		if isinstance(j,list):
+			sd.symbol_in(symbol,j)
 
 if __name__=="__main__":
 	sd=mbase.mbase('sina.db')

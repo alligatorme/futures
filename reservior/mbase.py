@@ -34,7 +34,7 @@ class mbase():#metaclass=singleton
 			rst={str(i)[-1]:str(i)[-2:] for i in [year,year+1,year+2]}
 			symbol=symbol[:-3]+rst[symbol[-3]]+symbol[-2:]
 		if not symbol in self.tables:
-			sql="create table if not exists %s (%s)"%(symbol,col_def(self.rawself.rawstype)+', PRIMARY KEY (date)')
+			sql="create table if not exists %s (%s)"%(symbol,col_def(self.rows,self.rowstype)+', PRIMARY KEY (date)')
 			self.raw.execute(sql)
 			self.tables.append(symbol)
 		return symbol
